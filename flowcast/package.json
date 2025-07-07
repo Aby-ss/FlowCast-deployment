@@ -1,21 +1,20 @@
 {
-  "name": "flowcast-tui",
-  "version": "1.0.0",
-  "description": "Terminal app for video transcription and social post generation using Gemini 3.5",
-  "main": "app.js",
-  "type": "module",
+  "name": "flowcast",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node app.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "enquirer": "^2.3.6",
-    "boxen": "^7.1.1",
-    "chalk": "^5.3.0",
-    "ytdl-core": "^4.11.4",
-    "fluent-ffmpeg": "^2.1.2",
-    "ffmpeg-static": "^5.1.0",
-    "node-fetch": "^2.6.7",
-    "@google/genai": "^0.6.0",
-    "dotenv": "^16.4.5"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.3.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4"
   }
-} 
+}
