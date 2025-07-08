@@ -38,7 +38,7 @@ export default function Home() {
 
       <main className="flex flex-col items-center justify-center pt-24 w-full min-h-[60vh] relative">
         {/* Background image for the section, larger than the section */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-230 z-0" style={{ width: '130%', maxWidth: '44rem', height: '120%', maxHeight: '32rem' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-270 z-0" style={{ width: '130%', maxWidth: '44rem', height: '120%', maxHeight: '32rem' }}>
           <Image
             src="/Background.png"
             alt="Background"
@@ -91,9 +91,9 @@ export default function Home() {
           </h1>
         </Section>
 
-        {/* Features function */}
-        <Section className="relative font-semibold max-w-5xl rounded-xl py-70 z-10 mt-20 w-full px-4">
-          <h1 className="text-5xl font-semibold tracking-[-1.5px] text-black mb-8 text-left w-full">Just the tip of the iceberg</h1>
+        {/* Features section */}
+        <Section className="relative font-semibold max-w-5xl rounded-xl py-70 z-10 mt-20 w-full px-4 mb-2">
+          <h1 className="text-5xl font-semibold tracking-[-1.5px] text-black mb-2 text-left w-full">Just the tip of the iceberg</h1>
           <div className="flex flex-col md:flex-row w-full gap-4 items-stretch">
             {/* Left: Tall bento box */}
             <div className="flex flex-col w-full md:w-1/2 justify-end">
@@ -127,6 +127,37 @@ export default function Home() {
             </div>
           </div>
         </Section>
+
+        {/* How it works section */}
+        <section className="relative font-semibold max-w-6xl rounded-xl -py-30 z-10 mt-0 mx-auto w-full px-4 -translate-y-40">
+          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 place-items-center items-center">
+            <div className="rounded-xl overflow-hidden shadow-lg w-full h-[300px] md:h-[500px]">
+              <video
+                className="w-full h-full object-cover"
+                controls
+                controlsList="nodownload nofullscreen noremoteplayback"
+                disablePictureInPicture
+                autoPlay
+                loop
+                playsInline
+              >
+                <source src="/demo.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <div className="text-left w-full">
+              <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter text-[#1A1A1A] mb-4 break-words w-full">
+              From Record to <br/>  <span className="bg-[#8CC63E] py-[1.5] px-2 -rotate-1 inline-block"><span className="text-white">Revenue</span></span> in Minutes
+              </h1>
+              <h3 className="text-lg md:text-lg font-medium tracking-tight text-[#555] mt-15">
+                <span className="text-black font-[550] text-xl text-balance">1. Upload or Link a YouTube Video</span> <br/> <span className="leading-1 text-balance">Drop in your video link or file — FlowCast instantly pulls the transcript, title, description, and key timestamps so you can skip the manual prep</span> <br/> <br/>
+                <span className="text-black font-[550] text-xl text-balance">2. Auto-Generate Platform-Ready Posts</span> <br/> <span className="leading-1 text-balance">From one video, FlowCast creates 4–6 tailored posts — including captions, hashtags, headlines, and hooks — for your selected platforms (Instagram, LinkedIn, X, Threads, TikTok, etc.)</span> <br/> <br/>
+                <span className="text-black font-[550] text-xl text-balance">3. Choose Post Styles for Each Platform</span> <br/> <span className="leading-1 text-balance">Whether you want punchy carousel hooks for Instagram, clean quote posts for LinkedIn, or tweet-sized summaries — FlowCast adapts your content tone and format per channel</span> <br/>
+              </h3>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
