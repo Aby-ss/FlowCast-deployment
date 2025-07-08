@@ -1,5 +1,17 @@
 import Image from "next/image";
 
+// Section wrapper for modular section logic
+function Section({ className = '', children, ...props }) {
+  return (
+    <section
+      className={`w-full flex flex-col items-center justify-center ${className}`.trim()}
+      {...props}
+    >
+      {children}
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-white">
@@ -24,10 +36,9 @@ export default function Home() {
         </button>
       </nav>
 
-
-      <main className="flex flex-col items-center justify-center pt-44 w-full min-h-[60vh] relative">
+      <main className="flex flex-col items-center justify-center pt-24 w-full min-h-[60vh] relative">
         {/* Background image for the section, larger than the section */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0" style={{ width: '130%', maxWidth: '44rem', height: '120%', maxHeight: '32rem' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-230 z-0" style={{ width: '130%', maxWidth: '44rem', height: '120%', maxHeight: '32rem' }}>
           <Image
             src="/Background.png"
             alt="Background"
@@ -39,7 +50,7 @@ export default function Home() {
         </div>
         
         {/* Landing Page section */}
-        <section className="relative w-full font-semibold max-w-2xl rounded-xl p-10 flex flex-col items-center justify-center z-10" style={{ background: 'transparent' }}>
+        <Section className="relative font-semibold max-w-2xl rounded-xl p-10 z-10" style={{ background: 'transparent' }}>
           {/* Floating images around the heading */}
           <Image
             src="/Post Card 1.svg"
@@ -78,7 +89,44 @@ export default function Home() {
           >
             AI Social<br/>Media Posts In<br/><span className="bg-[#8CC63E] px-1 -rotate-1 inline-block"><span className="text-white rotate-1 inline-block">MINUTES</span></span>
           </h1>
-        </section>
+        </Section>
+
+        {/* Features function */}
+        <Section className="relative font-semibold max-w-5xl rounded-xl py-70 z-10 mt-20 w-full px-4">
+          <h1 className="text-5xl font-semibold tracking-[-1.5px] text-black mb-8 text-left w-full">Just the tip of the iceberg</h1>
+          <div className="flex flex-col md:flex-row w-full gap-4 items-stretch">
+            {/* Left: Tall bento box */}
+            <div className="flex flex-col w-full md:w-1/2 justify-end">
+              <div className="flex-1 bg-[#FCFCFC] rounded-2xl shadow-sm flex flex-col justify-end border border-[#DFDFDF] p-8 pt-32 min-h-[340px] relative overflow-hidden">
+                {/* Background image */}
+                <Image src="/Content.png" alt="Feature 1" width={420} height={420} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-70 opacity-100 z-0" />
+                <div className="mt-auto flex flex-col items-center relative z-10">
+                  <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">Upload Any Video and Let FlowCast Handle the Heavy Lifting</h2>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">No more copy-pasting from editors or wasting hours slicing up content. With one upload, you get structured, reusable content components ready for your next campaign</h3>
+                </div>
+              </div>
+            </div>
+            {/* Right: 2 half bento boxes stacked */}
+            <div className="flex flex-col w-full md:w-1/2 gap-4">
+              <div className="flex-1 bg-[#FCFCFC] rounded-2xl shadow-sm flex flex-col justify-end border border-[#DFDFDF] p-8 pt-32 min-h-[160px] relative overflow-hidden">
+                {/* Background image */}
+                <Image src="/Paper.png" alt="Feature 2" width={480} height={480} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-30 opacity-100 z-0" />
+                <div className="mt-auto flex flex-col items-center relative z-10">
+                  <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">Multi-Platform AI Writing</h2>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">From LinkedIn carousels to Instagram captions and tweet threads, FlowCast writes in platform-native styles using AI trained on high-conversion formats.</h3>
+                </div>
+              </div>
+              <div className="flex-1 bg-[#FCFCFC] rounded-2xl shadow-sm flex flex-col justify-end border border-[#DFDFDF] p-8 pt-32 min-h-[160px] relative overflow-hidden">
+                {/* Background image */}
+                <Image src="/Button_Img.svg" alt="Feature 3" width={180} height={180} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-20 opacity-100 z-0" />
+                <div className="mt-16 flex flex-col items-center relative z-10">
+                  <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">One-Click Export & Workflow</h2>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">Export organized folders, copy platform-ready captions, or send posts directly into your scheduler (like Notion or Buffer).</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Section>
       </main>
     </div>
   );
