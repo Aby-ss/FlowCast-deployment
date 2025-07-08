@@ -158,6 +158,41 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Footer Section */}
+        <footer id="about" className="bg-[#8CC63E] py-12 px-6 w-full">
+          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-10">
+            {/* Left Side: Image + Text */}
+            <div className="flex flex-col gap-2 max-w-sm">
+              <Image src="/Logo1.svg" width={410} height={410} alt="Blnk Logo" className="w-28 h-auto mb-2 cursor-pointer" />
+              <h3 className="text-lg w-[320px] md:w-[520px] font-medium text-white tracking-tight leading-6 font-sans">FlowCast is an AI-powered repurposing engine for content creators and educators — drop in a YouTube link and get scroll-stopping posts, carousels, and tweets tailored for every platform, so you can grow your audience without rewriting a single word</h3>
+              <h2 className="text-2xl tracking-tight w-max font-semibold text-white mt-1 font-sans">Create once. Grow everywhere. Powered by one — You + FlowCast</h2>
+              <h2 className="text-md w-max font-medium tracking-tight text-white mt-3 font-sans">Hey there 👋 I'm Rao, the maker of FlowCast. Feel free to check out my work over on Twitter</h2>
+            </div>
+            {/* Right Side: Two Columns */}
+            <div className="grid grid-cols-2 gap-2 w-full max-w-2xl">
+              {/* Column 1 */}
+              <div>
+                <h1 className="text-lg font-semibold text-white mb-2 font-sans">Links</h1>
+                <ul className="space-y-1">
+                  <li><a href="#home" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Home</a></li>
+                  <li><a href="#features" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Features</a></li>
+                  <li><a href="#how-it-works" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">How it Works</a></li>
+                  <li><a href="#about" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">About Us</a></li>
+                </ul>
+              </div>
+              {/* Column 2 */}
+              <div>
+                <h1 className="text-lg font-semibold text-white mb-2 font-sans">More</h1>
+                <ul className="space-y-1">
+                  <li><a href="https://twitter.com/getrepliq" target="_blank" rel="noopener noreferrer" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Follow on Twitter</a></li>
+                  <li><a href="https://instagram.com/getrepliq" target="_blank" rel="noopener noreferrer" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Follow on Instagram</a></li>
+                  <li><a href="https://twitter.com/heyspecterr" target="_blank" rel="noopener noreferrer" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Creator</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );
