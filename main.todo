@@ -1,0 +1,28 @@
+Website/Frontend Development :
+          Design :
+                    ✔ Landing Page
+                    ✔ Features Section
+                    ✔ How it Works Section
+                    ✔ Footer
+
+                    ✔ Base form page for web app
+                    ☐ Main showcase page for web app and posts
+          Development :
+                    ✔ Landing Page UI
+                    ✔ Features Section UI
+                    ✔ How it Works Section UI 
+                    ✔ Footer UI
+                    ☐ Responsive Design
+                    ☐ Animations
+
+                    ☐ Main showcase page for web app and posts
+          ✔ General App Logo & Brand Design Scheme
+          ✔ Project Ad Designs & Other Designs
+
+Application Todo:
+          ✔ Adding base terminal based UI and form for inputting details
+          ✔ Add base transcript module and LLM processing with Gemini
+          ✔ Add base prompts for post and individual platforms posts
+          ☐ Update base prompts for creating better unique posts
+          ☐ Update base code with modules for webapp usage
+          ☐ Update code for using AI images and thumbnails from videos
