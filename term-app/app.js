@@ -231,3 +231,52 @@ function displayPost(platform, content) {
     process.exit(1);
   }
 })();
+
+// Exportable functions for website usage
+export async function generatePostFromYouTube(videoUrl, platform, customInstructions = '') {
+  const transcript = await transcribeVideo(videoUrl);
+  if (!transcript || transcript.trim() === '' || transcript.startsWith('[Transcription failed]')) {
+    throw new Error('No transcript available.');
+  }
+  let basePrompt = PLATFORM_PROMPTS[platform](transcript);
+  if (customInstructions) {
+    basePrompt += `\n\n${customInstructions}`;
+  }
+  const addon = PLATFORM_ADDON_PROMPTS[platform] || '';
+  const promptText = `${basePrompt}\n\n${addon}`;
+  return await generatePostContent(transcript, platform, promptText);
+}
+
+export async function generatePostFromMp4(mp4Path, platform, customInstructions = '') {
+  const transcript = await transcribeVideo(mp4Path);
+  if (!transcript || transcript.trim() === '' || transcript.startsWith('[Transcription failed]')) {
+    throw new Error('No transcript available.');
+  }
+  let basePrompt = PLATFORM_PROMPTS[platform](transcript);
+  if (customInstructions) {
+    basePrompt += `\n\n${customInstructions}`;
+  }
+  const addon = PLATFORM_ADDON_PROMPTS[platform] || '';
+  const promptText = `${basePrompt}\n\n${addon}`;
+  return await generatePostContent(transcript, platform, promptText);
+}
+
+// Platform-specific helpers for website usage
+export async function generateTwitterPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'Twitter', customInstructions);
+}
+export async function generateInstagramPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'Instagram', customInstructions);
+}
+export async function generateLinkedInPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'LinkedIn', customInstructions);
+}
+export async function generateTwitterPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'Twitter', customInstructions);
+}
+export async function generateInstagramPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'Instagram', customInstructions);
+}
+export async function generateLinkedInPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'LinkedIn', customInstructions);
+}
