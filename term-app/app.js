@@ -123,16 +123,25 @@ async function transcribeVideo(videoSource) {
 
 // Platform-specific prompt templates
 const PLATFORM_PROMPTS = {
-  Twitter: (transcript) => `You are a social media expert. Write a Twitter/X post based on the following transcript. Make it concise, engaging, and include a strong hook, relevant hashtags, and a call to action.\n\nTranscript:\n${transcript}`,
-  Instagram: (transcript) => `You are a social media expert. Write an Instagram post based on the following transcript. Start with a strong hook, provide engaging content, and end with a call to action. Suggest a caption and up to 3 relevant hashtags.\n\nTranscript:\n${transcript}`,
-  LinkedIn: (transcript) => `You are a social media expert. Write a LinkedIn post based on the following transcript. Make it professional, insightful, and relevant to industry professionals. Start with a hook, provide value, and end with a call to action.\n\nTranscript:\n${transcript}`,
+  Twitter: (transcript) => {
+    const prompt = fs.readFileSync(path.join(__dirname, 'prompts', 'twitter.md'), 'utf8');
+    return prompt.replace('${transcript}', transcript);
+  },
+  Instagram: (transcript) => {
+    const prompt = fs.readFileSync(path.join(__dirname, 'prompts', 'instagram.md'), 'utf8');
+    return prompt.replace('${transcript}', transcript);
+  },
+  LinkedIn: (transcript) => {
+    const prompt = fs.readFileSync(path.join(__dirname, 'prompts', 'linkedin.md'), 'utf8');
+    return prompt.replace('${transcript}', transcript);
+  },
 };
 
 // Platform-specific add-on prompts
 const PLATFORM_ADDON_PROMPTS = {
-  Twitter: "Make sure to use a conversational tone and include a trending hashtag.",
-  Instagram: "Add a question at the end to encourage comments.",
-  LinkedIn: "Highlight a key professional takeaway in the conclusion.",
+  Twitter: "Make sure the post is very short and not so long. Make sure to use a conversational tone and a very informative structure which is still very non-formal.",
+  Instagram: "Make sure the post is short and not so long that reading it takes a lot of time. Add a question at the end to encourage comments and make sure it connects with people in the very beginning to stop people from scrolling away",
+  LinkedIn: "Highlight a key professional takeaway in the conclusion and ask the users to drop in their advice or ask them a question to get them typing in the comments",
 };
 
 // Refactor generatePostContent to accept a custom prompt
@@ -175,14 +184,25 @@ async function maybeRewritePost(transcript, platform, basePrompt) {
 
 // 5. Display each post in a styled box
 function displayPost(platform, content) {
-  const title = chalk.bold.blue(platform);
+  let borderColor = 'cyan';
+  let title = chalk.bold.blue(platform);
+  if (platform === 'Twitter') {
+    borderColor = 'grey';
+    title = chalk.bold.gray(platform);
+  } else if (platform === 'Instagram') {
+    borderColor = 'magentaBright'; // closest to purple/blue gradient
+    title = chalk.bold.magentaBright(platform);
+  } else if (platform === 'LinkedIn') {
+    borderColor = 'blue';
+    title = chalk.bold.blue(platform);
+  }
   const box = boxen(content, {
     title,
     titleAlignment: 'center',
     padding: 1,
     margin: 1,
     borderStyle: 'round',
-    borderColor: 'cyan',
+    borderColor,
   });
   console.log(box);
 }
