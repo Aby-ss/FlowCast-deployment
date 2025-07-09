@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 // Section wrapper for modular section logic
 function Section({ className = '', children, ...props }) {
@@ -14,9 +15,9 @@ function Section({ className = '', children, ...props }) {
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-white">
+    <div className="relative min-h-screen bg-white" style={{ scrollBehavior: 'smooth' }}>
       <nav
-        className="fixed top-4 left-1/2 -translate-x-1/2 w-[99vw] max-w-7xl flex items-center justify-between px-8 py-2 bg-[#8CC63E] rounded-full shadow-lg z-50"
+        className="fixed top-4 left-1/2 -translate-x-1/2 w-[99vw] max-w-7xl flex items-center justify-between px-8 py-2 bg-[#8CC63E] rounded-full shadow-lg z-50 transition-all duration-700 ease-out opacity-0 animate-navbar-fadein"
         style={{ borderRadius: '9999px' }}
       >
         {/* Left: Logo/Image */}
@@ -31,14 +32,16 @@ export default function Home() {
           <a href="#" className="text-white font-grand-local text-lg hover:underline">Contact</a>
         </div>
         {/* Right: Button Image */}
-        <button className="flex items-center justify-center rounded-full p-2 transition">
-          <Image src="/button.svg" alt="User" width={90} height={90} />
-        </button>
+        <Link href="/webapp" passHref legacyBehavior>
+          <a className="flex items-center cursor-pointer justify-center rounded-full p-2 transition group">
+            <Image src="/button.svg" alt="User" width={90} height={90} className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-2" />
+          </a>
+        </Link>
       </nav>
 
       <main className="flex flex-col items-center justify-center pt-24 w-full min-h-[60vh] relative">
         {/* Background image for the section, larger than the section */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-270 z-0" style={{ width: '130%', maxWidth: '44rem', height: '120%', maxHeight: '32rem' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-330 z-0" style={{ width: '140%', maxWidth: '50rem', height: '130%', maxHeight: '36rem' }}>
           <Image
             src="/Background.png"
             alt="Background"
@@ -121,7 +124,7 @@ export default function Home() {
                 <Image src="/Button_Img.svg" alt="Feature 3" width={180} height={180} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-20 opacity-100 z-0" />
                 <div className="mt-16 flex flex-col items-center relative z-10">
                   <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">One-Click Export & Workflow</h2>
-                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">Export organized folders, copy platform-ready captions, or send posts directly into your scheduler (like Notion or Buffer).</h3>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-black leading-5 text-left w-full">Export organized folders, copy platform-ready captions, or send posts directly into your scheduler (like Notion or Buffer).</h3>
                 </div>
               </div>
             </div>
@@ -164,7 +167,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-10">
             {/* Left Side: Image + Text */}
             <div className="flex flex-col gap-2 max-w-sm">
-              <Image src="/Logo1.svg" width={410} height={410} alt="Blnk Logo" className="w-28 h-auto mb-2 cursor-pointer" />
+              <Image src="/Logo1.svg" width={410} height={410} alt="Blnk Logo" className="w-28 h-auto mb-2 rotate-8 cursor-pointer" />
               <h3 className="text-lg w-[320px] md:w-[520px] font-medium text-white tracking-tight leading-6 font-sans">FlowCast is an AI-powered repurposing engine for content creators and educators — drop in a YouTube link and get scroll-stopping posts, carousels, and tweets tailored for every platform, so you can grow your audience without rewriting a single word</h3>
               <h2 className="text-2xl tracking-tight w-max font-semibold text-white mt-1 font-sans">Create once. Grow everywhere. Powered by one — You + FlowCast</h2>
               <h2 className="text-md w-max font-medium tracking-tight text-white mt-3 font-sans">Hey there 👋 I'm Rao, the maker of FlowCast. Feel free to check out my work over on Twitter</h2>
