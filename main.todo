@@ -23,6 +23,6 @@ Application Todo:
           ✔ Adding base terminal based UI and form for inputting details
           ✔ Add base transcript module and LLM processing with Gemini
           ✔ Add base prompts for post and individual platforms posts
-          ☐ Update base prompts for creating better unique posts
-          ☐ Update base code with modules for webapp usage
+          ✔ Update base prompts for creating better unique posts @done(25-07-09 17:18)
+          ✔ Update base code with modules for webapp usage @done(25-07-09 17:22)
           ☐ Update code for using AI images and thumbnails from videos
