@@ -1,5 +1,5 @@
 // Required dependencies
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import enquirer from 'enquirer';
 const { prompt, MultiSelect } = enquirer;
 import boxen from 'boxen';
@@ -15,6 +15,8 @@ import axios from 'axios';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -223,60 +225,11 @@ function displayPost(platform, content) {
   console.log(box);
 }
 
-// Fetch last 3 tweets for a username (using scraping as fallback)
-async function getLastTweets(username) {
-  try {
-    // Try Twitter API v2 (if bearer token is set)
-    const bearer = process.env.TWITTER_BEARER_TOKEN;
-    if (bearer) {
-      const url = `https://api.twitter.com/2/tweets/search/recent?query=from:${username}&tweet.fields=created_at&max_results=3`;
-      const res = await axios.get(url, { headers: { Authorization: `Bearer ${bearer}` } });
-      return res.data.data.map(t => t.text);
-    }
-  } catch (err) {
-    // Fallback to scraping
-  }
-  // Fallback: scrape using nitter.net
-  try {
-    const res = await axios.get(`https://nitter.net/${username}`);
-    const matches = [...res.data.matchAll(/<div class="tweet-content media-body">([\s\S]*?)<\/div>/g)];
-    return matches.slice(0, 3).map(m => m[1].replace(/<[^>]+>/g, '').trim());
-  } catch (err) {
-    return ['Could not fetch tweets.'];
-  }
-}
-
-// Fetch last 3 LinkedIn posts for a username (scraping public profile)
-async function getLastLinkedInPosts(username) {
-  // LinkedIn API is not public, so we scrape the public profile posts
-  try {
-    const res = await axios.get(`https://www.linkedin.com/in/${username}/detail/recent-activity/shares/`);
-    const matches = [...res.data.matchAll(/<span class="break-words">([\s\S]*?)<\/span>/g)];
-    return matches.slice(0, 3).map(m => m[1].replace(/<[^>]+>/g, '').trim());
-  } catch (err) {
-    return ['Could not fetch LinkedIn posts.'];
-  }
-}
-
 // Main flow
 (async () => {
   try {
-    // Move mode selection to the very top
-    const { mode } = await prompt({
-      type: 'select',
-      name: 'mode',
-      message: 'What do you want to do?',
-      choices: [
-        { name: 'Generate social posts from video', value: 'generate' },
-        { name: 'Fetch user post history', value: 'history' },
-      ],
-    });
-    console.log('DEBUG: mode selected:', mode);
-    if (mode === 'history' || mode === 'Fetch user post history') {
-      await printUserHistory();
-      return;
-    }
-    // Only runs if mode is 'generate'
+    // Remove mode selection and history feature
+    // Only run the generate flow
     const videoSource = await getVideoInput();
     const platforms = await getPlatforms();
     if (!platforms || platforms.length === 0) {
@@ -289,8 +242,11 @@ async function getLastLinkedInPosts(username) {
       console.log(chalk.red('No transcript available. Exiting.'));
       process.exit(1);
     }
+    // Always include the video link in the prompt
     for (const platform of platforms) {
-      const basePrompt = `${PLATFORM_PROMPTS[platform](transcript)}\n\n${PLATFORM_ADDON_PROMPTS[platform] || ''}`;
+      // Add the video link to the prompt
+      const videoLinkLine = `\n\nVideo link: ${videoSource}`;
+      const basePrompt = `${PLATFORM_PROMPTS[platform](transcript)}${videoLinkLine}\n\n${PLATFORM_ADDON_PROMPTS[platform] || ''}`;
       for (let i = 1; i <= numPosts; i++) {
         let promptText = basePrompt;
         if (numPosts > 1) {
@@ -307,30 +263,7 @@ async function getLastLinkedInPosts(username) {
   }
 })();
 
-// Prompt for username and platform, then print last 3 posts
-async function printUserHistory() {
-  const { platform } = await prompt({
-    type: 'select',
-    name: 'platform',
-    message: 'Which platform do you want to fetch history from?',
-    choices: ['Twitter', 'LinkedIn'],
-  });
-  const { username } = await prompt({
-    type: 'input',
-    name: 'username',
-    message: `Enter the ${platform} username:`,
-  });
-  let posts = [];
-  if (platform === 'Twitter') {
-    posts = await getLastTweets(username);
-  } else {
-    posts = await getLastLinkedInPosts(username);
-  }
-  console.log(`\nLast 3 posts for ${username} on ${platform}:\n`);
-  posts.forEach((post, i) => {
-    console.log(`${i + 1}. ${post}\n`);
-  });
-}
+// Remove printUserHistory and related helpers
 
 
 // Exportable functions for website usage
@@ -381,3 +314,5 @@ export async function generateInstagramPostFromMp4(mp4Path, customInstructions =
 export async function generateLinkedInPostFromMp4(mp4Path, customInstructions = '') {
   return generatePostFromMp4(mp4Path, 'LinkedIn', customInstructions);
 }
+
+export { transcribeVideo, generatePostContent };
