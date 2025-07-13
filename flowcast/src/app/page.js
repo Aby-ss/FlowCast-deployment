@@ -60,7 +60,7 @@ export default function Home() {
             alt="Left"
             width={328}
             height={328}
-            className="absolute left-0 top-1/2 translate-y-3 -translate-x-45 z-10"
+            className="absolute left-0 top-1/2 translate-y-3 -translate-x-45 z-10 animate-float-slow"
             style={{ pointerEvents: 'none' }}
           />
           <Image
@@ -68,7 +68,7 @@ export default function Home() {
             alt="Right"
             width={328}
             height={328}
-            className="absolute right-0 top-1/2 translate-y-3 translate-x-45 z-10"
+            className="absolute right-0 top-1/2 translate-y-3 translate-x-45 z-10 animate-float-slow-delayed"
             style={{ pointerEvents: 'none' }}
           />
           <Image
@@ -76,7 +76,7 @@ export default function Home() {
             alt="Below"
             width={328}
             height={328}
-            className="absolute left-1/2 bottom-0 translate-x-[-50%] translate-y-80 z-10"
+            className="absolute left-1/2 bottom-0 translate-x-[-50%] translate-y-80 z-10 animate-float-slow-reverse"
             style={{ pointerEvents: 'none' }}
           />
           <div
