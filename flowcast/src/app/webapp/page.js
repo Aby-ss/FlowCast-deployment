@@ -23,6 +23,7 @@ export default function WebAppPage() {
   const [numCopies, setNumCopies] = useState(1);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [copiedStates, setCopiedStates] = useState({});
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -31,6 +32,19 @@ export default function WebAppPage() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // Prevent scrolling until form is submitted
+  useEffect(() => {
+    if (!hasGenerated) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [hasGenerated]);
 
   const handlePlatformChange = (platform) => {
     setPlatforms((prev) =>
@@ -118,6 +132,7 @@ export default function WebAppPage() {
     setLoading(true);
     setResult(null);
     setError('');
+    setHasGenerated(true);
     try {
       let payload;
       let headers = { 'Content-Type': 'application/json' };
@@ -301,9 +316,9 @@ export default function WebAppPage() {
       {/* Generated Ad Copy Results */}
       <div className="w-full flex flex-col items-center justify-center mt-8 relative" style={{ minHeight: 200 }}>
         {loading && <div className="text-lg text-gray-700">Generating your post...</div>}
-        {result && platforms.length > 0 && (
+        {result && (
           <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ minHeight: 200 }}>
-            {platforms.map((platform, pIdx) =>
+            {Object.keys(result).map((platform, pIdx) =>
               (result[platform] || []).map((copy, cIdx) => {
                 const postId = `${platform}-${cIdx}`;
                 const colors = getPlatformColors(platform);
