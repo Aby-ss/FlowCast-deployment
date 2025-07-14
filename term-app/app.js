@@ -1,5 +1,5 @@
 // Required dependencies
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import enquirer from 'enquirer';
 const { prompt, MultiSelect } = enquirer;
 import boxen from 'boxen';
@@ -11,9 +11,12 @@ import ffmpegPath from 'ffmpeg-static';
 import { GoogleGenAI } from '@google/genai';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
+import axios from 'axios';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -35,6 +38,21 @@ async function getPlatforms() {
     choices: ['Twitter', 'Instagram', 'LinkedIn'],
   });
   return await promptPlatforms.run();
+}
+
+// 3. Prompt for number of posts per platform
+async function getNumPosts() {
+  const { numPosts } = await prompt({
+    type: 'input',
+    name: 'numPosts',
+    message: 'How many posts do you want to generate per platform?',
+    initial: '1',
+    validate: (input) => {
+      const n = parseInt(input, 10);
+      return n > 0 && n <= 10 ? true : 'Please enter a number between 1 and 10.';
+    },
+  });
+  return parseInt(numPosts, 10);
 }
 
 // Helper: Download YouTube audio as MP3 using yt-dlp
@@ -210,20 +228,33 @@ function displayPost(platform, content) {
 // Main flow
 (async () => {
   try {
+    // Remove mode selection and history feature
+    // Only run the generate flow
     const videoSource = await getVideoInput();
     const platforms = await getPlatforms();
     if (!platforms || platforms.length === 0) {
       console.log(chalk.red('No platforms selected. Exiting.'));
       process.exit(1);
     }
+    const numPosts = await getNumPosts();
     const transcript = await transcribeVideo(videoSource);
     if (!transcript || transcript.trim() === '' || transcript.startsWith('[Transcription failed]')) {
       console.log(chalk.red('No transcript available. Exiting.'));
       process.exit(1);
     }
+    // Always include the video link in the prompt
     for (const platform of platforms) {
-      const basePrompt = `${PLATFORM_PROMPTS[platform](transcript)}\n\n${PLATFORM_ADDON_PROMPTS[platform] || ''}`;
-      await maybeRewritePost(transcript, platform, basePrompt);
+      // Add the video link to the prompt
+      const videoLinkLine = `\n\nVideo link: ${videoSource}`;
+      const basePrompt = `${PLATFORM_PROMPTS[platform](transcript)}${videoLinkLine}\n\n${PLATFORM_ADDON_PROMPTS[platform] || ''}`;
+      for (let i = 1; i <= numPosts; i++) {
+        let promptText = basePrompt;
+        if (numPosts > 1) {
+          promptText += `\n\nVary the style, structure, or focus for post #${i}.`;
+        }
+        const content = await generatePostContent(transcript, platform, promptText);
+        displayPost(`${platform} (Post ${i} of ${numPosts})`, content);
+      }
     }
     console.log(chalk.green('All posts generated!'));
   } catch (err) {
@@ -231,3 +262,57 @@ function displayPost(platform, content) {
     process.exit(1);
   }
 })();
+
+// Remove printUserHistory and related helpers
+
+
+// Exportable functions for website usage
+export async function generatePostFromYouTube(videoUrl, platform, customInstructions = '') {
+  const transcript = await transcribeVideo(videoUrl);
+  if (!transcript || transcript.trim() === '' || transcript.startsWith('[Transcription failed]')) {
+    throw new Error('No transcript available.');
+  }
+  let basePrompt = PLATFORM_PROMPTS[platform](transcript);
+  if (customInstructions) {
+    basePrompt += `\n\n${customInstructions}`;
+  }
+  const addon = PLATFORM_ADDON_PROMPTS[platform] || '';
+  const promptText = `${basePrompt}\n\n${addon}`;
+  return await generatePostContent(transcript, platform, promptText);
+}
+
+export async function generatePostFromMp4(mp4Path, platform, customInstructions = '') {
+  const transcript = await transcribeVideo(mp4Path);
+  if (!transcript || transcript.trim() === '' || transcript.startsWith('[Transcription failed]')) {
+    throw new Error('No transcript available.');
+  }
+  let basePrompt = PLATFORM_PROMPTS[platform](transcript);
+  if (customInstructions) {
+    basePrompt += `\n\n${customInstructions}`;
+  }
+  const addon = PLATFORM_ADDON_PROMPTS[platform] || '';
+  const promptText = `${basePrompt}\n\n${addon}`;
+  return await generatePostContent(transcript, platform, promptText);
+}
+
+// Platform-specific helpers for website usage
+export async function generateTwitterPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'Twitter', customInstructions);
+}
+export async function generateInstagramPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'Instagram', customInstructions);
+}
+export async function generateLinkedInPostFromYouTube(videoUrl, customInstructions = '') {
+  return generatePostFromYouTube(videoUrl, 'LinkedIn', customInstructions);
+}
+export async function generateTwitterPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'Twitter', customInstructions);
+}
+export async function generateInstagramPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'Instagram', customInstructions);
+}
+export async function generateLinkedInPostFromMp4(mp4Path, customInstructions = '') {
+  return generatePostFromMp4(mp4Path, 'LinkedIn', customInstructions);
+}
+
+export { transcribeVideo, generatePostContent };
