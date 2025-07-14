@@ -26,10 +26,10 @@ export default function Home() {
         </div>
         {/* Center: Links */}
         <div className="flex gap-10">
-          <a href="#" className="text-white font-grand-local text-lg hover:underline">Home</a>
-          <a href="#" className="text-white font-grand-local text-lg hover:underline">How it Works</a>
-          <a href="#" className="text-white font-grand-local text-lg hover:underline">Pricing</a>
-          <a href="#" className="text-white font-grand-local text-lg hover:underline">Contact</a>
+          <a href="#home" className="text-white font-grand-local text-lg hover:underline">Home</a>
+          <a href="#how-it-works" className="text-white font-grand-local text-lg hover:underline">How it Works</a>
+          <a href="#features" className="text-white font-grand-local text-lg hover:underline">Features</a>
+          <a href="#about" className="text-white font-grand-local text-lg hover:underline">About</a>
         </div>
         {/* Right: Button Image */}
         <Link href="/webapp" passHref legacyBehavior>
@@ -39,9 +39,9 @@ export default function Home() {
         </Link>
       </nav>
 
-      <main className="flex flex-col items-center justify-center pt-24 w-full min-h-[60vh] relative">
+      <main id="home" className="flex flex-col items-center justify-center pt-24 w-full min-h-[60vh] relative">
         {/* Background image for the section, larger than the section */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-330 z-0" style={{ width: '140%', maxWidth: '50rem', height: '130%', maxHeight: '36rem' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-350 z-0" style={{ width: '150%', maxWidth: '55rem', height: '140%', maxHeight: '42rem' }}>
           <Image
             src="/Background.png"
             alt="Background"
@@ -95,7 +95,7 @@ export default function Home() {
         </Section>
 
         {/* Features section */}
-        <Section className="relative font-semibold max-w-5xl rounded-xl py-70 z-10 mt-20 w-full px-4 mb-2">
+        <Section id="features" className="relative font-semibold max-w-5xl rounded-xl py-70 z-10 mt-20 w-full px-4 mb-2">
           <h1 className="text-5xl font-semibold tracking-[-1.5px] text-black mb-2 text-left w-full">Just the tip of the iceberg</h1>
           <div className="flex flex-col md:flex-row w-full gap-4 items-stretch">
             {/* Left: Tall bento box */}
@@ -132,7 +132,7 @@ export default function Home() {
         </Section>
 
         {/* How it works section */}
-        <section className="relative font-semibold max-w-6xl rounded-xl -py-30 z-10 mt-0 mx-auto w-full px-4 -translate-y-40">
+        <section id="how-it-works" className="relative font-semibold max-w-6xl rounded-xl -py-30 z-10 mt-0 mx-auto w-full px-4 -translate-y-40">
           <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-12 place-items-center items-center">
             <div className="rounded-xl overflow-hidden shadow-lg w-full h-[300px] md:h-[500px]">
               <video
@@ -181,7 +181,7 @@ export default function Home() {
                   <li><a href="#home" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Home</a></li>
                   <li><a href="#features" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">Features</a></li>
                   <li><a href="#how-it-works" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">How it Works</a></li>
-                  <li><a href="#about" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">About Us</a></li>
+                  <li><a href="#about" className="text-white font-medium hover:text-[#6F9C33] transition-colors cursor-pointer font-sans">About</a></li>
                 </ul>
               </div>
               {/* Column 2 */}
