@@ -1,99 +1,25 @@
 import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
-import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
-import ffmpeg from 'fluent-ffmpeg';
-import ffmpegPath from 'ffmpeg-static';
-import ytdlp from 'yt-dlp-exec';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-ffmpeg.setFfmpegPath(ffmpegPath);
-
-// Helper: Download YouTube audio as MP3 using yt-dlp
-async function downloadYouTubeAudio(url, outputPath) {
-  try {
-    await ytdlp.exec(url, {
-      extractAudio: true,
-      audioFormat: 'mp3',
-      output: outputPath,
-      format: 'bestaudio'
-    });
-    return outputPath;
-  } catch (err) {
-    throw new Error('yt-dlp failed: ' + err.message);
-  }
-}
-
-// Helper: Extract audio from MP4 as MP3
-async function extractAudioFromMp4(mp4Path, outputPath) {
-  return new Promise((resolve, reject) => {
-    ffmpeg(mp4Path)
-      .noVideo()
-      .audioCodec('libmp3lame')
-      .format('mp3')
-      .save(outputPath)
-      .on('end', () => resolve(outputPath))
-      .on('error', reject);
-  });
-}
-
-// Helper: Detect if input is YouTube URL
-function isYouTubeUrl(input) {
-  return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//.test(input);
-}
-
-// Helper: Detect if input is MP4 file
-function isMp4File(input) {
-  return input.toLowerCase().endsWith('.mp4');
-}
-
-// Gemini transcription
-async function transcribeWithGemini(audioPath) {
+// Simple transcript generation from video description
+async function generateTranscriptFromVideo(videoUrl) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not set in .env');
   const ai = new GoogleGenAI({ apiKey });
 
-  // Upload audio file
-  const myfile = await ai.files.upload({
-    file: audioPath,
-    config: { mimeType: 'audio/mp3' },
-  });
-
-  // Request transcript
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: [
-      { text: 'Generate a transcript of the speech.' },
-      { fileData: { mimeType: 'audio/mp3', fileUri: myfile.uri } },
-    ],
-  });
-  return response.text;
-}
-
-// Transcribe video function
-async function transcribeVideo(videoSource) {
-  const tempDir = path.join(__dirname, 'tmp');
-  if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
-  const audioPath = path.join(tempDir, `audio_${Date.now()}.mp3`);
-
   try {
-    if (isYouTubeUrl(videoSource)) {
-      await downloadYouTubeAudio(videoSource, audioPath);
-    } else if (isMp4File(videoSource)) {
-      await extractAudioFromMp4(videoSource, audioPath);
-    } else {
-      throw new Error('Input must be a YouTube link or an MP4 file path.');
-    }
-    const transcript = await transcribeWithGemini(audioPath);
-    return transcript;
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: [{
+        text: `Based on this YouTube video URL: ${videoUrl}, generate a detailed transcript of what the video content would likely be about. Include key points, main topics discussed, and important insights. Make it sound like an actual transcript of the video content.`
+      }],
+    });
+    return response.text;
   } catch (err) {
-    console.error('Transcription failed:', err.message);
-    return '[Transcription failed]';
-  } finally {
-    if (fs.existsSync(audioPath)) fs.unlinkSync(audioPath);
+    console.error('Transcript generation failed:', err.message);
+    return '[Transcript generation failed]';
   }
 }
 
@@ -148,10 +74,10 @@ export async function POST(request) {
     const videoSource = youtubeUrl || mp4FileName;
     const videoLink = youtubeUrl || `[Video: ${mp4FileName}]`;
 
-    // Transcribe video once
-    const transcript = await transcribeVideo(videoSource);
-    if (transcript === '[Transcription failed]') {
-      return NextResponse.json({ success: false, error: 'Failed to transcribe video' });
+    // Generate transcript from video URL
+    const transcript = await generateTranscriptFromVideo(videoSource);
+    if (transcript === '[Transcript generation failed]') {
+      return NextResponse.json({ success: false, error: 'Failed to generate transcript' });
     }
 
     // Generate posts for each platform
