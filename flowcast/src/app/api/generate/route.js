@@ -13,6 +13,20 @@ function extractVideoId(url) {
   return match ? match[1] : null;
 }
 
+// Get video title using YouTube Data API v3
+async function getVideoTitleFromAPI(videoId) {
+  try {
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) return '';
+    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`;
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+    return data.items && data.items[0] ? data.items[0].snippet.title : '';
+  } catch (e) {
+    return '';
+  }
+}
+
 // Get video info using yt-dlp
 async function getVideoInfo(videoId) {
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
@@ -93,12 +107,11 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'At least one platform must be selected' });
     }
 
-    // Get video title using yt-dlp
+    // Get video title using YouTube Data API
     let videoTitle = '';
     const videoId = extractVideoId(youtubeUrl);
     if (videoId) {
-      const info = await getVideoInfo(videoId);
-      videoTitle = info.title || '';
+      videoTitle = await getVideoTitleFromAPI(videoId);
     }
 
     // Generate transcript from video URL
