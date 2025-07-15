@@ -15,6 +15,7 @@ export default function WebAppPage() {
   const [instructions, setInstructions] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [videoTitle, setVideoTitle] = useState('');
   const [error, setError] = useState('');
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [platforms, setPlatforms] = useState(['Twitter']);
@@ -115,6 +116,7 @@ export default function WebAppPage() {
       const data = await res.json();
       if (data.success) {
         setResult(data.posts);
+        setVideoTitle(data.videoTitle || '');
       } else {
         setError(data.error || 'Failed to generate post.');
       }
@@ -272,9 +274,9 @@ export default function WebAppPage() {
                     <div className="bg-white rounded-xl shadow-lg p-6 relative">
                       {/* Content Box */}
                       <div className="bg-[#F4F4F4] border-2 border-dashed border-[#CFCFCF] rounded-lg p-4 mb-8">
-                        <h1 className="text-xl font-bold mb-3 text-gray-900">Video Title</h1>
+                        <h1 className="text-xl font-bold mb-3 text-gray-900 tracking-[-0.5px]">{videoTitle || 'Video Title'}</h1>
                         <h3 
-                          className="text-lg font-medium text-gray-800 whitespace-pre-line leading-relaxed"
+                          className="text-lg font-medium text-gray-800 whitespace-pre-line leading-relaxed tracking-[-0.5px]"
                           dangerouslySetInnerHTML={{ __html: formatPostContent(copy) }}
                         />
                       </div>

@@ -2,6 +2,30 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
+
+// Helper to extract video ID from YouTube URL
+function extractVideoId(url) {
+  const match = url.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/);
+  return match ? match[1] : null;
+}
+
+// Get video info using yt-dlp
+async function getVideoInfo(videoId) {
+  const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  try {
+    const { stdout } = await execAsync(`yt-dlp "${videoUrl}" --dump-json --no-warnings --no-check-certificates`);
+    const info = JSON.parse(stdout);
+    return {
+      title: info.title || '',
+    };
+  } catch (error) {
+    return { title: '' };
+  }
+}
 
 // Simple transcript generation from video description
 async function generateTranscriptFromVideo(videoUrl) {
@@ -69,6 +93,14 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'At least one platform must be selected' });
     }
 
+    // Get video title using yt-dlp
+    let videoTitle = '';
+    const videoId = extractVideoId(youtubeUrl);
+    if (videoId) {
+      const info = await getVideoInfo(videoId);
+      videoTitle = info.title || '';
+    }
+
     // Generate transcript from video URL
     const transcript = await generateTranscriptFromVideo(youtubeUrl);
     if (!transcript || transcript === '[Transcript generation failed]') {
@@ -88,7 +120,7 @@ export async function POST(request) {
       }
     }
 
-    return NextResponse.json({ success: true, posts });
+    return NextResponse.json({ success: true, posts, videoTitle: videoTitle || 'Video Title' });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json({ success: false, error: error.message || 'Internal server error' });
