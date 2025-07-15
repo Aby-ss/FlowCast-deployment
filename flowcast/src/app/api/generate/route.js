@@ -26,15 +26,15 @@ async function generateTranscriptFromVideo(videoUrl) {
 // Platform-specific prompt templates
 const PLATFORM_PROMPTS = {
   Twitter: (transcript, videoLink) => {
-    const prompt = fs.readFileSync(path.join(process.cwd(), 'term-app', 'prompts', 'twitter.md'), 'utf8');
+    const prompt = fs.readFileSync(path.join(process.cwd(), 'src/app/api/generate/prompts', 'twitter.md'), 'utf8');
     return prompt.replace('${transcript}', transcript).replace('${videoLink}', videoLink);
   },
   Instagram: (transcript, videoLink) => {
-    const prompt = fs.readFileSync(path.join(process.cwd(), 'term-app', 'prompts', 'instagram.md'), 'utf8');
+    const prompt = fs.readFileSync(path.join(process.cwd(), 'src/app/api/generate/prompts', 'instagram.md'), 'utf8');
     return prompt.replace('${transcript}', transcript).replace('${videoLink}', videoLink);
   },
   LinkedIn: (transcript, videoLink) => {
-    const prompt = fs.readFileSync(path.join(process.cwd(), 'term-app', 'prompts', 'linkedin.md'), 'utf8');
+    const prompt = fs.readFileSync(path.join(process.cwd(), 'src/app/api/generate/prompts', 'linkedin.md'), 'utf8');
     return prompt.replace('${transcript}', transcript).replace('${videoLink}', videoLink);
   },
 };
