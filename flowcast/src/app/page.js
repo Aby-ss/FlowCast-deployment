@@ -105,7 +105,7 @@ export default function Home() {
                 <Image src="/Content.png" alt="Feature 1" width={420} height={420} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-70 opacity-100 z-0" />
                 <div className="mt-auto flex flex-col items-center relative z-10">
                   <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">Upload Any Video and Let FlowCast Handle the Heavy Lifting</h2>
-                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">No more copy-pasting from editors or wasting hours slicing up content. With one upload, you get structured, reusable content components ready for your next campaign</h3>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">No more jumping between tools or rewriting content manually. With one upload, you get ready-to-copy ad text like captions, tweets, and LinkedIn posts — instantly.</h3>
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function Home() {
                 <Image src="/Paper.png" alt="Feature 2" width={480} height={480} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-30 opacity-100 z-0" />
                 <div className="mt-auto flex flex-col items-center relative z-10">
                   <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">Multi-Platform AI Writing</h2>
-                  <h3 className="text-md font-medium tracking-[-0.4px] text-balance text-black leading-5 text-left w-full">From LinkedIn carousels to Instagram captions and tweet threads, FlowCast writes in platform-native styles using AI trained on high-conversion formats.</h3>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-black leading-5 text-left w-full">From LinkedIn carousels to Instagram captions and tweet threads, FlowCast writes in platform-native styles using AI prompts.</h3>
                 </div>
               </div>
               <div className="flex-1 bg-[#FCFCFC] rounded-2xl shadow-sm flex flex-col justify-end border border-[#DFDFDF] p-8 pt-32 min-h-[160px] relative overflow-hidden">
@@ -124,7 +124,7 @@ export default function Home() {
                 <Image src="/Button_Img.svg" alt="Feature 3" width={180} height={180} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-20 opacity-100 z-0" />
                 <div className="mt-16 flex flex-col items-center relative z-10">
                   <h2 className="text-xl font-bold tracking-[-0.7px] text-balance text-black mb-1 text-left w-full">One-Click Export & Workflow</h2>
-                  <h3 className="text-md font-medium tracking-[-0.4px] text-black leading-5 text-left w-full">Export organized folders, copy platform-ready captions, or send posts directly into your scheduler (like Notion or Buffer).</h3>
+                  <h3 className="text-md font-medium tracking-[-0.4px] text-black leading-5 text-left w-full">Copy platform-ready captions directly to your clipboard — formatted for each channel and ready to paste wherever you publish.</h3>
                 </div>
               </div>
             </div>

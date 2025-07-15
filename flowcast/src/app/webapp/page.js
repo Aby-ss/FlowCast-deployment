@@ -13,8 +13,6 @@ const PLATFORM_OPTIONS = [
 export default function WebAppPage() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [instructions, setInstructions] = useState('');
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
@@ -101,32 +99,6 @@ export default function WebAppPage() {
     return formattedText;
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
-      setYoutubeUrl('');
-    }
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setYoutubeUrl('');
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -134,16 +106,10 @@ export default function WebAppPage() {
     setError('');
     setHasGenerated(true);
     try {
-      let payload;
-      let headers = { 'Content-Type': 'application/json' };
-      if (file) {
-        payload = JSON.stringify({ mp4FileName: file.name, instructions, platforms, numCopies });
-      } else {
-        payload = JSON.stringify({ youtubeUrl, instructions, platforms, numCopies });
-      }
+      const payload = JSON.stringify({ youtubeUrl, instructions, platforms, numCopies });
       const res = await fetch('/api/generate', {
         method: 'POST',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: payload,
       });
       const data = await res.json();
@@ -175,43 +141,10 @@ export default function WebAppPage() {
               <input
                 type="url"
                 value={youtubeUrl}
-                onChange={(e) => { setYoutubeUrl(e.target.value); setFile(null); }}
+                onChange={(e) => { setYoutubeUrl(e.target.value); }}
                 placeholder="https://youtube.com/watch?v=..."
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all tracking-[-0.5px]"
-                disabled={!!file}
               />
-            </div>
-
-            {/* File Upload */}
-            <div>
-              <label className="block text-lg font-medium text-gray-900 mb-3 tracking-[-0.5px]">
-                Upload your video as an .mp4 file below <span className="text-red-500">*</span>
-              </label>
-              <div
-                className={`relative border-2 border-dashed rounded-lg py-2 px-4 text-center transition-all cursor-pointer ${
-                  isDragOver
-                    ? 'border-green-500 bg-green-50'
-                    : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'
-                }`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-              >
-                <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-1">
-                    <img src="/upload.svg" alt="Upload" className="w-8 h-8" />
-                  </div>
-                  <p className="text-gray-600 font-medium tracking-[-0.5px]">Upload your video in this box</p>
-                  {file && <span className="text-green-600 text-sm mt-2">Selected: {file.name}</span>}
-                </div>
-                <input
-                  type="file"
-                  accept="video/mp4"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  onChange={handleFileChange}
-                  disabled={!!youtubeUrl}
-                />
-              </div>
             </div>
 
             {/* Platform Selection */}

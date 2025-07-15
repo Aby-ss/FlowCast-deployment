@@ -60,36 +60,29 @@ async function generatePostContent(transcript, platform, promptText) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { youtubeUrl, mp4FileName, instructions, platforms, numCopies } = body;
+    const { youtubeUrl, instructions, platforms, numCopies } = body;
 
-    if (!youtubeUrl && !mp4FileName) {
-      return NextResponse.json({ success: false, error: 'YouTube URL or MP4 file is required' });
+    if (!youtubeUrl) {
+      return NextResponse.json({ success: false, error: 'YouTube URL is required' });
     }
-
     if (!platforms || platforms.length === 0) {
       return NextResponse.json({ success: false, error: 'At least one platform must be selected' });
     }
 
-    // Determine video source
-    const videoSource = youtubeUrl || mp4FileName;
-    const videoLink = youtubeUrl || `[Video: ${mp4FileName}]`;
-
     // Generate transcript from video URL
-    const transcript = await generateTranscriptFromVideo(videoSource);
-    if (transcript === '[Transcript generation failed]') {
+    const transcript = await generateTranscriptFromVideo(youtubeUrl);
+    if (!transcript || transcript === '[Transcript generation failed]') {
       return NextResponse.json({ success: false, error: 'Failed to generate transcript' });
     }
+    const videoLink = youtubeUrl;
 
     // Generate posts for each platform
     const posts = {};
-    
     for (const platform of platforms) {
       posts[platform] = [];
-      
       for (let i = 0; i < numCopies; i++) {
         const basePrompt = PLATFORM_PROMPTS[platform](transcript, videoLink);
         const fullPrompt = instructions ? `${basePrompt}\n\nAdditional Instructions: ${instructions}` : basePrompt;
-        
         const postContent = await generatePostContent(transcript, platform, fullPrompt);
         posts[platform].push(postContent);
       }
